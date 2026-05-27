@@ -1,0 +1,38 @@
+{
+  "name": "grpc-monorepo-starter",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Degit-able starter: pnpm workspace + Turborepo + NestJS gRPC services + ts-proto + Buf. Type-safe TS, Go, and Python clients from a single .proto edit.",
+  "license": "MIT",
+  "author": "Mateo Kadiu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mateokadiu/grpc-monorepo-starter.git"
+  },
+  "homepage": "https://github.com/mateokadiu/grpc-monorepo-starter#readme",
+  "bugs": "https://github.com/mateokadiu/grpc-monorepo-starter/issues",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "proto:gen": "pnpm --filter @repo/proto-gen gen",
+    "proto:lint": "buf lint",
+    "proto:breaking": "buf breaking --against '.git#branch=main'",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.0",
+    "turbo": "^2.3.0",
+    "typescript": "^5.7.2"
+  }
+}
