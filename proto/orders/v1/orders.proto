@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package orders.v1;
+
+option go_package = "github.com/mateokadiu/grpc-monorepo-starter/clients/go/pb/orders/v1;ordersv1";
+
+// OrdersService — the reference service surface for the starter.
+//
+// Implementations live in apps/service-a; consumers in apps/service-b.
+// Generators: ts-proto (TS/Nest), protoc-gen-go (Go), grpc_tools (Python).
+service OrdersService {
+  // Create a new order. Server assigns id and created_at.
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+
+  // Fetch a single order by id. Returns NOT_FOUND when missing.
+  rpc GetOrder(GetOrderRequest) returns (Order);
+
+  // Stream orders matching the filter. Server flushes one per message
+  // and ends the stream when the result set is exhausted.
+  rpc ListOrders(ListOrdersRequest) returns (stream Order);
+}
+
+// OrderStatus — lifecycle of an order. Renumbering is a breaking change;
+// buf breaking guards this in CI.
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_PENDING = 1;
+  ORDER_STATUS_PAID = 2;
+  ORDER_STATUS_SHIPPED = 3;
+  ORDER_STATUS_DELIVERED = 4;
+  ORDER_STATUS_CANCELLED = 5;
+}
+
+// LineItem — one SKU on an order.
+message LineItem {
+  string sku = 1;
+  string name = 2;
+  uint32 quantity = 3;
+  uint64 unit_price_cents = 4;
+}
+
+// Order — the canonical order entity. Money is integer cents; times are
+// ISO-8601 UTC strings (RFC 3339).
+message Order {
+  string id = 1;
+  string customer_id = 2;
+  repeated LineItem line_items = 3;
+  uint64 total_cents = 4;
+  string currency = 5; // ISO 4217, e.g. "USD"
+  OrderStatus status = 6;
+  string created_at = 7; // RFC 3339
+}
+
+message CreateOrderRequest {
+  string customer_id = 1;
+  repeated LineItem line_items = 2;
+  string currency = 3;
+}
+
+message CreateOrderResponse {
+  Order order = 1;
+}
+
+message GetOrderRequest {
+  string id = 1;
+}
+
+message ListOrdersRequest {
+  // Optional filter; empty matches all customers.
+  string customer_id = 1;
+  // Optional cap on emitted orders. 0 = no limit.
+  uint32 limit = 2;
+}

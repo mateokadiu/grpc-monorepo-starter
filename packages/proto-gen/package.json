@@ -1,0 +1,40 @@
+{
+  "name": "@repo/proto-gen",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Generated TypeScript types and gRPC bindings for the proto/ contract. Run `pnpm proto:gen` after editing any .proto file.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./orders/v1": {
+      "types": "./dist/generated/orders/v1/orders.d.ts",
+      "import": "./dist/generated/orders/v1/orders.js"
+    }
+  },
+  "files": ["dist", "src/generated", "proto"],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "gen": "node scripts/gen.mjs",
+    "lint": "biome check src",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.3",
+    "@grpc/grpc-js": "^1.12.2",
+    "@nestjs/microservices": "^11.0.0",
+    "long": "^5.2.3",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "ts-proto": "^2.7.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
