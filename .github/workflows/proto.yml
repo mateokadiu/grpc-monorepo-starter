@@ -1,0 +1,26 @@
+name: Proto
+
+on:
+  pull_request:
+    paths:
+      - "proto/**"
+      - "buf.yaml"
+      - "buf.gen.yaml"
+
+jobs:
+  buf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # buf breaking needs the base branch reachable.
+          fetch-depth: 0
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          version: "1.49.0"
+      - name: buf lint
+        run: buf lint
+      - name: buf breaking
+        run: |
+          BASE="${{ github.base_ref || 'main' }}"
+          buf breaking --against ".git#branch=${BASE}"
