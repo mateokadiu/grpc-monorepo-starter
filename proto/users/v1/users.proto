@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package users.v1;
+
+option go_package = "github.com/mateokadiu/grpc-monorepo-starter/clients/go/pb/users/v1;usersv1";
+
+// UsersService — second proto package shipped by the starter.
+//
+// Lives in its own module so consumers see the multi-package layout:
+// two top-level packages, each with their own buf.yaml module path
+// under buf.yaml. Implementations ship in apps/service-a; the
+// generated TS surface is re-exported from @repo/proto-gen.
+service UsersService {
+  // Fetch a single user by id. Returns NOT_FOUND when missing.
+  rpc GetUser(GetUserRequest) returns (User);
+
+  // Create a new user. Server assigns id and created_at.
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+
+  // Stream users matching an optional name prefix. Server flushes one
+  // message per row and ends the stream when the result set is drained.
+  rpc ListUsers(ListUsersRequest) returns (stream User);
+}
+
+// UserStatus — coarse lifecycle. Add states by appending — never renumber.
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_ACTIVE = 1;
+  USER_STATUS_SUSPENDED = 2;
+}
+
+// User — canonical user entity. Email is lowercased by the server on
+// create; created_at is RFC 3339 UTC.
+message User {
+  string id = 1;
+  string email = 2;
+  string display_name = 3;
+  UserStatus status = 4;
+  string created_at = 5;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string display_name = 2;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message ListUsersRequest {
+  // Optional case-insensitive prefix filter against display_name.
+  string name_prefix = 1;
+  // 0 = no cap.
+  uint32 limit = 2;
+}
