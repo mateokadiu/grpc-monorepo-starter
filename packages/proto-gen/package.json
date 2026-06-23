@@ -14,6 +14,10 @@
     "./orders/v1": {
       "types": "./dist/generated/orders/v1/orders.d.ts",
       "import": "./dist/generated/orders/v1/orders.js"
+    },
+    "./users/v1": {
+      "types": "./dist/generated/users/v1/users.d.ts",
+      "import": "./dist/generated/users/v1/users.js"
     }
   },
   "files": ["dist", "src/generated", "proto"],

@@ -5,53 +5,61 @@ import grpc
 from orders.v1 import orders_pb2 as orders_dot_v1_dot_orders__pb2
 
 
-class OrdersServiceStub:
-    """OrdersService — the reference service surface for the starter."""
+class OrdersServiceStub(object):
+    """OrdersService — the reference service surface for the starter.
+
+    Implementations live in apps/service-a; consumers in apps/service-b.
+    Generators: ts-proto (TS/Nest), protoc-gen-go (Go), grpc_tools (Python).
+    """
 
     def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
         self.CreateOrder = channel.unary_unary(
-            '/orders.v1.OrdersService/CreateOrder',
-            request_serializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString
-            if hasattr(orders_dot_v1_dot_orders__pb2.CreateOrderRequest, "SerializeToString")
-            else (lambda m: b""),
-            response_deserializer=orders_dot_v1_dot_orders__pb2.CreateOrderResponse.FromString
-            if hasattr(orders_dot_v1_dot_orders__pb2.CreateOrderResponse, "FromString")
-            else (lambda b: orders_dot_v1_dot_orders__pb2.CreateOrderResponse()),
-        )
+                '/orders.v1.OrdersService/CreateOrder',
+                request_serializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString,
+                response_deserializer=orders_dot_v1_dot_orders__pb2.CreateOrderResponse.FromString,
+                _registered_method=True)
         self.GetOrder = channel.unary_unary(
-            '/orders.v1.OrdersService/GetOrder',
-            request_serializer=orders_dot_v1_dot_orders__pb2.GetOrderRequest.SerializeToString
-            if hasattr(orders_dot_v1_dot_orders__pb2.GetOrderRequest, "SerializeToString")
-            else (lambda m: b""),
-            response_deserializer=orders_dot_v1_dot_orders__pb2.Order.FromString
-            if hasattr(orders_dot_v1_dot_orders__pb2.Order, "FromString")
-            else (lambda b: orders_dot_v1_dot_orders__pb2.Order()),
-        )
+                '/orders.v1.OrdersService/GetOrder',
+                request_serializer=orders_dot_v1_dot_orders__pb2.GetOrderRequest.SerializeToString,
+                response_deserializer=orders_dot_v1_dot_orders__pb2.Order.FromString,
+                _registered_method=True)
         self.ListOrders = channel.unary_stream(
-            '/orders.v1.OrdersService/ListOrders',
-            request_serializer=orders_dot_v1_dot_orders__pb2.ListOrdersRequest.SerializeToString
-            if hasattr(orders_dot_v1_dot_orders__pb2.ListOrdersRequest, "SerializeToString")
-            else (lambda m: b""),
-            response_deserializer=orders_dot_v1_dot_orders__pb2.Order.FromString
-            if hasattr(orders_dot_v1_dot_orders__pb2.Order, "FromString")
-            else (lambda b: orders_dot_v1_dot_orders__pb2.Order()),
-        )
+                '/orders.v1.OrdersService/ListOrders',
+                request_serializer=orders_dot_v1_dot_orders__pb2.ListOrdersRequest.SerializeToString,
+                response_deserializer=orders_dot_v1_dot_orders__pb2.Order.FromString,
+                _registered_method=True)
 
 
-class OrdersServiceServicer:
-    """Server-side API. Subclass and override the three methods."""
+class OrdersServiceServicer(object):
+    """OrdersService — the reference service surface for the starter.
+
+    Implementations live in apps/service-a; consumers in apps/service-b.
+    Generators: ts-proto (TS/Nest), protoc-gen-go (Go), grpc_tools (Python).
+    """
 
     def CreateOrder(self, request, context):
+        """Create a new order. Server assigns id and created_at.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetOrder(self, request, context):
+        """Fetch a single order by id. Returns NOT_FOUND when missing.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListOrders(self, request, context):
+        """Stream orders matching the filter. Server flushes one per message
+        and ends the stream when the result set is exhausted.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -59,11 +67,113 @@ class OrdersServiceServicer:
 
 def add_OrdersServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        'CreateOrder': grpc.unary_unary_rpc_method_handler(servicer.CreateOrder),
-        'GetOrder': grpc.unary_unary_rpc_method_handler(servicer.GetOrder),
-        'ListOrders': grpc.unary_stream_rpc_method_handler(servicer.ListOrders),
+            'CreateOrder': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateOrder,
+                    request_deserializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.FromString,
+                    response_serializer=orders_dot_v1_dot_orders__pb2.CreateOrderResponse.SerializeToString,
+            ),
+            'GetOrder': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetOrder,
+                    request_deserializer=orders_dot_v1_dot_orders__pb2.GetOrderRequest.FromString,
+                    response_serializer=orders_dot_v1_dot_orders__pb2.Order.SerializeToString,
+            ),
+            'ListOrders': grpc.unary_stream_rpc_method_handler(
+                    servicer.ListOrders,
+                    request_deserializer=orders_dot_v1_dot_orders__pb2.ListOrdersRequest.FromString,
+                    response_serializer=orders_dot_v1_dot_orders__pb2.Order.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        'orders.v1.OrdersService', rpc_method_handlers
-    )
+            'orders.v1.OrdersService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('orders.v1.OrdersService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class OrdersService(object):
+    """OrdersService — the reference service surface for the starter.
+
+    Implementations live in apps/service-a; consumers in apps/service-b.
+    Generators: ts-proto (TS/Nest), protoc-gen-go (Go), grpc_tools (Python).
+    """
+
+    @staticmethod
+    def CreateOrder(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/orders.v1.OrdersService/CreateOrder',
+            orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString,
+            orders_dot_v1_dot_orders__pb2.CreateOrderResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetOrder(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/orders.v1.OrdersService/GetOrder',
+            orders_dot_v1_dot_orders__pb2.GetOrderRequest.SerializeToString,
+            orders_dot_v1_dot_orders__pb2.Order.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListOrders(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/orders.v1.OrdersService/ListOrders',
+            orders_dot_v1_dot_orders__pb2.ListOrdersRequest.SerializeToString,
+            orders_dot_v1_dot_orders__pb2.Order.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

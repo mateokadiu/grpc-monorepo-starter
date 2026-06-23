@@ -1,11 +1,23 @@
 version: v2
+# Single buf module at proto/, containing multiple top-level packages
+# (orders.v1, users.v1). Splitting per-package modules in v2 requires
+# either moving files to nested package-root dirs or duplicate roots —
+# both ergonomic dead-ends. The lint + breaking rules apply equally
+# across packages here; per-package overrides go in the `modules` list
+# below if a future package needs them.
 modules:
   - path: proto
+    name: buf.build/mateokadiu/grpc-monorepo-starter
 lint:
   use:
     - STANDARD
   except:
     - PACKAGE_VERSION_SUFFIX
+    # The Order/User entities are intentionally returned from both
+    # GetX (unary) and ListX (server-streaming) RPCs. The stream
+    # naming convention is documented in the proto.
+    - RPC_RESPONSE_STANDARD_NAME
+    - RPC_REQUEST_RESPONSE_UNIQUE
 breaking:
   use:
     - FILE
