@@ -1,0 +1,27 @@
+{
+  "name": "@example/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser fetch demo for the gRPC starter. Uses @repo/connect-web + @connectrpc/connect-web to call a Connect-protocol gateway from a static HTML page. Point at envoy-grpc-web or connect-go to bridge raw gRPC.",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "vite --port 5173",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.3",
+    "@connectrpc/connect": "^2.1.0",
+    "@connectrpc/connect-web": "^2.1.0",
+    "@repo/connect-web": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "happy-dom": "^15.11.6",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}
