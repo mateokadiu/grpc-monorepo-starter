@@ -2,7 +2,8 @@ version: v2
 managed:
   enabled: true
 plugins:
-  # TypeScript — ts-proto with grpc-js + NestJS-compatible output.
+  # TypeScript (Node / NestJS) — ts-proto with grpc-js + NestJS-compatible output.
+  # Consumed by service-a, service-b, and unit tests via @repo/proto-gen.
   - local: ["pnpm", "exec", "protoc-gen-ts_proto"]
     out: packages/proto-gen/src/generated
     opt:
@@ -13,6 +14,18 @@ plugins:
       - addGrpcMetadata=true
       - useExactTypes=false
       - useOptionals=messages
+
+  # TypeScript (browser) — protoc-gen-es v2 emits message types + service
+  # descriptors usable from @connectrpc/connect, which speaks both
+  # HTTP/JSON (Connect protocol) and gRPC-Web over fetch. No server-side
+  # proxy required when the upstream is connect-go / connect-node /
+  # vanilla-Buf-routed; for raw gRPC servers (this repo's service-a)
+  # consumers point connect-web at an Envoy / vanguard / grpc-gateway.
+  - local: ["pnpm", "--filter", "@repo/connect-web", "exec", "protoc-gen-es"]
+    out: clients/connect-web/src/gen
+    opt:
+      - target=ts
+      - import_extension=js
 
   # Go — protoc-gen-go + protoc-gen-go-grpc via Buf remote plugins.
   - remote: buf.build/protocolbuffers/go:v1.34.2

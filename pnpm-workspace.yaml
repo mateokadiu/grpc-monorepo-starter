@@ -1,3 +1,5 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "clients/connect-web"
+  - "examples/*"
