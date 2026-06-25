@@ -1,10 +1,7 @@
 version: v2
 # Single buf module at proto/, containing multiple top-level packages
-# (orders.v1, users.v1). Splitting per-package modules in v2 requires
-# either moving files to nested package-root dirs or duplicate roots —
-# both ergonomic dead-ends. The lint + breaking rules apply equally
-# across packages here; per-package overrides go in the `modules` list
-# below if a future package needs them.
+# (orders.v1, users.v1). Per-module overrides are layered for vendored
+# protos like grpc.health.v1 that ship with non-STANDARD naming.
 modules:
   - path: proto
     name: buf.build/mateokadiu/grpc-monorepo-starter
@@ -18,6 +15,9 @@ lint:
     # naming convention is documented in the proto.
     - RPC_RESPONSE_STANDARD_NAME
     - RPC_REQUEST_RESPONSE_UNIQUE
+  # Vendored upstream protos use legacy naming we don't control.
+  ignore:
+    - proto/grpc
 breaking:
   use:
     - FILE

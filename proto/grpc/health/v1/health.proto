@@ -1,0 +1,33 @@
+// Standard gRPC health-checking protocol. Vendored from
+// https://github.com/grpc/grpc/blob/master/src/proto/grpc/health/v1/health.proto
+// so the starter is self-contained — consumers don't need to depend on
+// google's tree or pull in an external buf module to talk health.
+
+syntax = "proto3";
+
+package grpc.health.v1;
+
+option go_package = "github.com/mateokadiu/grpc-monorepo-starter/clients/go/pb/grpc/health/v1;healthv1";
+
+message HealthCheckRequest {
+  string service = 1;
+}
+
+message HealthCheckResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+    SERVICE_UNKNOWN = 3;
+  }
+  ServingStatus status = 1;
+}
+
+service Health {
+  // Unary probe: returns SERVING if the named service is healthy.
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+
+  // Server-streaming probe: emits a status whenever the named service's
+  // health changes. Clients should reconnect with backoff on RPC errors.
+  rpc Watch(HealthCheckRequest) returns (stream HealthCheckResponse);
+}

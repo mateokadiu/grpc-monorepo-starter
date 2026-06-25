@@ -5,7 +5,12 @@ import {
   type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { ORDERS_V1_PACKAGE, ORDERS_V1_PROTO_PATH } from '@repo/proto-gen';
+import {
+  GRPC_HEALTH_V1_PACKAGE,
+  GRPC_HEALTH_V1_PROTO_PATH,
+  ORDERS_V1_PACKAGE,
+  ORDERS_V1_PROTO_PATH,
+} from '@repo/proto-gen';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AppModule } from './app.module.js';
@@ -18,19 +23,25 @@ async function bootstrap(): Promise<void> {
   // Locate proto/ relative to this file so the server runs under both
   // `pnpm dev` (cwd=apps/service-a) and `node dist/main.js` (any cwd).
   const here = dirname(fileURLToPath(import.meta.url));
-  const protoPath = resolve(here, '..', '..', '..', ORDERS_V1_PROTO_PATH);
+  const repoRoot = resolve(here, '..', '..', '..');
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ trustProxy: true }),
   );
 
+  // Bind multiple proto packages on the same port — orders + the
+  // standard grpc.health.v1.Health service. Add more by appending to
+  // both arrays in lockstep.
   app.connectMicroservice<MicroserviceOptions>(
     {
       transport: Transport.GRPC,
       options: {
-        package: ORDERS_V1_PACKAGE,
-        protoPath,
+        package: [ORDERS_V1_PACKAGE, GRPC_HEALTH_V1_PACKAGE],
+        protoPath: [
+          resolve(repoRoot, ORDERS_V1_PROTO_PATH),
+          resolve(repoRoot, GRPC_HEALTH_V1_PROTO_PATH),
+        ],
         url: `${grpcHost}:${grpcPort}`,
         loader: { keepCase: false, longs: String, enums: String },
       },
@@ -43,7 +54,7 @@ async function bootstrap(): Promise<void> {
 
   // eslint-disable-next-line no-console
   console.log(
-    `[service-a] http=:${httpPort} grpc=${grpcHost}:${grpcPort} package=${ORDERS_V1_PACKAGE}`,
+    `[service-a] http=:${httpPort} grpc=${grpcHost}:${grpcPort} packages=${ORDERS_V1_PACKAGE},${GRPC_HEALTH_V1_PACKAGE}`,
   );
 }
 

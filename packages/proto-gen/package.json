@@ -18,6 +18,10 @@
     "./users/v1": {
       "types": "./dist/generated/users/v1/users.d.ts",
       "import": "./dist/generated/users/v1/users.js"
+    },
+    "./grpc/health/v1": {
+      "types": "./dist/generated/grpc/health/v1/health.d.ts",
+      "import": "./dist/generated/grpc/health/v1/health.js"
     }
   },
   "files": ["dist", "src/generated", "proto"],

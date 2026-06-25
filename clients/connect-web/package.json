@@ -18,6 +18,10 @@
     "./users/v1": {
       "types": "./dist/gen/users/v1/users_pb.d.ts",
       "import": "./dist/gen/users/v1/users_pb.js"
+    },
+    "./grpc/health/v1": {
+      "types": "./dist/gen/grpc/health/v1/health_pb.d.ts",
+      "import": "./dist/gen/grpc/health/v1/health_pb.js"
     }
   },
   "files": ["dist", "src/gen"],

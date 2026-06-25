@@ -16,3 +16,4 @@
  */
 export * from './gen/orders/v1/orders_pb.js';
 export * from './gen/users/v1/users_pb.js';
+export * from './gen/grpc/health/v1/health_pb.js';

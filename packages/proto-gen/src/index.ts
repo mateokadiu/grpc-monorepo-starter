@@ -45,3 +45,9 @@ export const USERS_V1_PACKAGE = 'users.v1';
 
 /** Convenience constant — proto file path relative to the repo root. */
 export const USERS_V1_PROTO_PATH = 'proto/users/v1/users.proto';
+
+/** Convenience constant — the canonical gRPC package name for the standard health service. */
+export const GRPC_HEALTH_V1_PACKAGE = 'grpc.health.v1';
+
+/** Convenience constant — proto file path relative to the repo root. */
+export const GRPC_HEALTH_V1_PROTO_PATH = 'proto/grpc/health/v1/health.proto';
