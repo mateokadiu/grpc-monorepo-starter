@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16orders/v1/orders.proto\x12\torders.v1\"v\n\x08LineItem\x12\x10\n\x03sku\x18\x01 \x01(\tR\x03sku\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n\x08quantity\x18\x03 \x01(\rR\x08quantity\x12(\n\x10unit_price_cents\x18\x04 \x01(\x04R\x0eunitPriceCents\"\xf8\x01\n\x05Order\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n\x0b\x63ustomer_id\x18\x02 \x01(\tR\ncustomerId\x12\x32\n\nline_items\x18\x03 \x03(\x0b\x32\x13.orders.v1.LineItemR\tlineItems\x12\x1f\n\x0btotal_cents\x18\x04 \x01(\x04R\ntotalCents\x12\x1a\n\x08\x63urrency\x18\x05 \x01(\tR\x08\x63urrency\x12.\n\x06status\x18\x06 \x01(\x0e\x32\x16.orders.v1.OrderStatusR\x06status\x12\x1d\n\ncreated_at\x18\x07 \x01(\tR\tcreatedAt\"\x85\x01\n\x12\x43reateOrderRequest\x12\x1f\n\x0b\x63ustomer_id\x18\x01 \x01(\tR\ncustomerId\x12\x32\n\nline_items\x18\x02 \x03(\x0b\x32\x13.orders.v1.LineItemR\tlineItems\x12\x1a\n\x08\x63urrency\x18\x03 \x01(\tR\x08\x63urrency\"=\n\x13\x43reateOrderResponse\x12&\n\x05order\x18\x01 \x01(\x0b\x32\x10.orders.v1.OrderR\x05order\"!\n\x0fGetOrderRequest\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\"J\n\x11ListOrdersRequest\x12\x1f\n\x0b\x63ustomer_id\x18\x01 \x01(\tR\ncustomerId\x12\x14\n\x05limit\x18\x02 \x01(\rR\x05limit*\xae\x01\n\x0bOrderStatus\x12\x1c\n\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\x18\n\x14ORDER_STATUS_PENDING\x10\x01\x12\x15\n\x11ORDER_STATUS_PAID\x10\x02\x12\x18\n\x14ORDER_STATUS_SHIPPED\x10\x03\x12\x1a\n\x16ORDER_STATUS_DELIVERED\x10\x04\x12\x1a\n\x16ORDER_STATUS_CANCELLED\x10\x05\x32\xd7\x01\n\rOrdersService\x12L\n\x0b\x43reateOrder\x12\x1d.orders.v1.CreateOrderRequest\x1a\x1e.orders.v1.CreateOrderResponse\x12\x38\n\x08GetOrder\x12\x1a.orders.v1.GetOrderRequest\x1a\x10.orders.v1.Order\x12>\n\nListOrders\x12\x1c.orders.v1.ListOrdersRequest\x1a\x10.orders.v1.Order0\x01\x42\xaf\x01\n\rcom.orders.v1B\x0bOrdersProtoP\x01ZLgithub.com/mateokadiu/grpc-monorepo-starter/clients/go/pb/orders/v1;ordersv1\xa2\x02\x03OXX\xaa\x02\tOrders.V1\xca\x02\tOrders\\V1\xe2\x02\x15Orders\\V1\\GPBMetadata\xea\x02\nOrders::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16orders/v1/orders.proto\x12\torders.v1\"v\n\x08LineItem\x12\x10\n\x03sku\x18\x01 \x01(\tR\x03sku\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n\x08quantity\x18\x03 \x01(\rR\x08quantity\x12(\n\x10unit_price_cents\x18\x04 \x01(\x04R\x0eunitPriceCents\"\xf8\x01\n\x05Order\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n\x0b\x63ustomer_id\x18\x02 \x01(\tR\ncustomerId\x12\x32\n\nline_items\x18\x03 \x03(\x0b\x32\x13.orders.v1.LineItemR\tlineItems\x12\x1f\n\x0btotal_cents\x18\x04 \x01(\x04R\ntotalCents\x12\x1a\n\x08\x63urrency\x18\x05 \x01(\tR\x08\x63urrency\x12.\n\x06status\x18\x06 \x01(\x0e\x32\x16.orders.v1.OrderStatusR\x06status\x12\x1d\n\ncreated_at\x18\x07 \x01(\tR\tcreatedAt\"\x85\x01\n\x12\x43reateOrderRequest\x12\x1f\n\x0b\x63ustomer_id\x18\x01 \x01(\tR\ncustomerId\x12\x32\n\nline_items\x18\x02 \x03(\x0b\x32\x13.orders.v1.LineItemR\tlineItems\x12\x1a\n\x08\x63urrency\x18\x03 \x01(\tR\x08\x63urrency\"=\n\x13\x43reateOrderResponse\x12&\n\x05order\x18\x01 \x01(\x0b\x32\x10.orders.v1.OrderR\x05order\"!\n\x0fGetOrderRequest\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\"J\n\x11ListOrdersRequest\x12\x1f\n\x0b\x63ustomer_id\x18\x01 \x01(\tR\ncustomerId\x12\x14\n\x05limit\x18\x02 \x01(\rR\x05limit\"m\n\x18\x42ulkCreateOrdersResponse\x12\x18\n\x07\x63reated\x18\x01 \x01(\rR\x07\x63reated\x12\x16\n\x06\x66\x61iled\x18\x02 \x01(\rR\x06\x66\x61iled\x12\x1f\n\x0b\x63reated_ids\x18\x03 \x03(\tR\ncreatedIds*\xae\x01\n\x0bOrderStatus\x12\x1c\n\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\x18\n\x14ORDER_STATUS_PENDING\x10\x01\x12\x15\n\x11ORDER_STATUS_PAID\x10\x02\x12\x18\n\x14ORDER_STATUS_SHIPPED\x10\x03\x12\x1a\n\x16ORDER_STATUS_DELIVERED\x10\x04\x12\x1a\n\x16ORDER_STATUS_CANCELLED\x10\x05\x32\xf4\x02\n\rOrdersService\x12L\n\x0b\x43reateOrder\x12\x1d.orders.v1.CreateOrderRequest\x1a\x1e.orders.v1.CreateOrderResponse\x12\x38\n\x08GetOrder\x12\x1a.orders.v1.GetOrderRequest\x1a\x10.orders.v1.Order\x12>\n\nListOrders\x12\x1c.orders.v1.ListOrdersRequest\x1a\x10.orders.v1.Order0\x01\x12X\n\x10\x42ulkCreateOrders\x12\x1d.orders.v1.CreateOrderRequest\x1a#.orders.v1.BulkCreateOrdersResponse(\x01\x12\x41\n\nEchoOrders\x12\x1d.orders.v1.CreateOrderRequest\x1a\x10.orders.v1.Order(\x01\x30\x01\x42\xaf\x01\n\rcom.orders.v1B\x0bOrdersProtoP\x01ZLgithub.com/mateokadiu/grpc-monorepo-starter/clients/go/pb/orders/v1;ordersv1\xa2\x02\x03OXX\xaa\x02\tOrders.V1\xca\x02\tOrders\\V1\xe2\x02\x15Orders\\V1\\GPBMetadata\xea\x02\nOrders::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,8 +32,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'orders.v1.orders_pb2', _glo
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\rcom.orders.v1B\013OrdersProtoP\001ZLgithub.com/mateokadiu/grpc-monorepo-starter/clients/go/pb/orders/v1;ordersv1\242\002\003OXX\252\002\tOrders.V1\312\002\tOrders\\V1\342\002\025Orders\\V1\\GPBMetadata\352\002\nOrders::V1'
-  _globals['_ORDERSTATUS']._serialized_start=719
-  _globals['_ORDERSTATUS']._serialized_end=893
+  _globals['_ORDERSTATUS']._serialized_start=830
+  _globals['_ORDERSTATUS']._serialized_end=1004
   _globals['_LINEITEM']._serialized_start=37
   _globals['_LINEITEM']._serialized_end=155
   _globals['_ORDER']._serialized_start=158
@@ -46,6 +46,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETORDERREQUEST']._serialized_end=640
   _globals['_LISTORDERSREQUEST']._serialized_start=642
   _globals['_LISTORDERSREQUEST']._serialized_end=716
-  _globals['_ORDERSSERVICE']._serialized_start=896
-  _globals['_ORDERSSERVICE']._serialized_end=1111
+  _globals['_BULKCREATEORDERSRESPONSE']._serialized_start=718
+  _globals['_BULKCREATEORDERSRESPONSE']._serialized_end=827
+  _globals['_ORDERSSERVICE']._serialized_start=1007
+  _globals['_ORDERSSERVICE']._serialized_end=1379
 # @@protoc_insertion_point(module_scope)

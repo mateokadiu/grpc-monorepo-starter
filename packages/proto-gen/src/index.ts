@@ -14,6 +14,7 @@
  * packages. Reach into the subpath when you need them.
  */
 export {
+  BulkCreateOrdersResponse,
   CreateOrderRequest,
   CreateOrderResponse,
   GetOrderRequest,

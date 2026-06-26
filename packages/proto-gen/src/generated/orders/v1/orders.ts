@@ -6,7 +6,14 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import type { handleServerStreamingCall, handleUnaryCall, Metadata, UntypedServiceImplementation } from "@grpc/grpc-js";
+import type {
+  handleBidiStreamingCall,
+  handleClientStreamingCall,
+  handleServerStreamingCall,
+  handleUnaryCall,
+  Metadata,
+  UntypedServiceImplementation,
+} from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -116,6 +123,17 @@ export interface ListOrdersRequest {
   customerId: string;
   /** Optional cap on emitted orders. 0 = no limit. */
   limit: number;
+}
+
+/**
+ * BulkCreateOrdersResponse — summary returned at the end of a client-
+ * streaming BulkCreateOrders call. created_ids preserves the order in
+ * which the server saw the incoming requests.
+ */
+export interface BulkCreateOrdersResponse {
+  created: number;
+  failed: number;
+  createdIds: string[];
 }
 
 export const ORDERS_V1_PACKAGE_NAME = "orders.v1";
@@ -482,6 +500,65 @@ export const ListOrdersRequest: MessageFns<ListOrdersRequest> = {
   },
 };
 
+function createBaseBulkCreateOrdersResponse(): BulkCreateOrdersResponse {
+  return { created: 0, failed: 0, createdIds: [] };
+}
+
+export const BulkCreateOrdersResponse: MessageFns<BulkCreateOrdersResponse> = {
+  encode(message: BulkCreateOrdersResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.created !== 0) {
+      writer.uint32(8).uint32(message.created);
+    }
+    if (message.failed !== 0) {
+      writer.uint32(16).uint32(message.failed);
+    }
+    for (const v of message.createdIds) {
+      writer.uint32(26).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): BulkCreateOrdersResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBulkCreateOrdersResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.created = reader.uint32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.failed = reader.uint32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.createdIds.push(reader.string());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
 /**
  * OrdersService — the reference service surface for the starter.
  *
@@ -504,6 +581,22 @@ export interface OrdersServiceClient {
    */
 
   listOrders(request: ListOrdersRequest, metadata?: Metadata): Observable<Order>;
+
+  /**
+   * Client-streaming import — client pushes any number of orders, the
+   * server batches them and returns a single summary once the client
+   * half-closes. Demonstrates the AsyncIterable input pattern.
+   */
+
+  bulkCreateOrders(request: Observable<CreateOrderRequest>, metadata?: Metadata): Observable<BulkCreateOrdersResponse>;
+
+  /**
+   * Bidirectional — for every request the server emits exactly one
+   * response, but in either direction the stream stays open as long as
+   * the peer is writing. Useful for chat-style or RPC-pipelining tests.
+   */
+
+  echoOrders(request: Observable<CreateOrderRequest>, metadata?: Metadata): Observable<Order>;
 }
 
 /**
@@ -531,6 +624,25 @@ export interface OrdersServiceController {
    */
 
   listOrders(request: ListOrdersRequest, metadata?: Metadata): Observable<Order>;
+
+  /**
+   * Client-streaming import — client pushes any number of orders, the
+   * server batches them and returns a single summary once the client
+   * half-closes. Demonstrates the AsyncIterable input pattern.
+   */
+
+  bulkCreateOrders(
+    request: Observable<CreateOrderRequest>,
+    metadata?: Metadata,
+  ): Promise<BulkCreateOrdersResponse> | Observable<BulkCreateOrdersResponse> | BulkCreateOrdersResponse;
+
+  /**
+   * Bidirectional — for every request the server emits exactly one
+   * response, but in either direction the stream stays open as long as
+   * the peer is writing. Useful for chat-style or RPC-pipelining tests.
+   */
+
+  echoOrders(request: Observable<CreateOrderRequest>, metadata?: Metadata): Observable<Order>;
 }
 
 export function OrdersServiceControllerMethods() {
@@ -540,7 +652,7 @@ export function OrdersServiceControllerMethods() {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("OrdersService", method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods: string[] = [];
+    const grpcStreamMethods: string[] = ["bulkCreateOrders", "echoOrders"];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcStreamMethod("OrdersService", method)(constructor.prototype[method], method, descriptor);
@@ -591,6 +703,35 @@ export const OrdersServiceService = {
     responseSerialize: (value: Order): Buffer => Buffer.from(Order.encode(value).finish()),
     responseDeserialize: (value: Buffer): Order => Order.decode(value),
   },
+  /**
+   * Client-streaming import — client pushes any number of orders, the
+   * server batches them and returns a single summary once the client
+   * half-closes. Demonstrates the AsyncIterable input pattern.
+   */
+  bulkCreateOrders: {
+    path: "/orders.v1.OrdersService/BulkCreateOrders" as const,
+    requestStream: true as const,
+    responseStream: false as const,
+    requestSerialize: (value: CreateOrderRequest): Buffer => Buffer.from(CreateOrderRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreateOrderRequest => CreateOrderRequest.decode(value),
+    responseSerialize: (value: BulkCreateOrdersResponse): Buffer =>
+      Buffer.from(BulkCreateOrdersResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): BulkCreateOrdersResponse => BulkCreateOrdersResponse.decode(value),
+  },
+  /**
+   * Bidirectional — for every request the server emits exactly one
+   * response, but in either direction the stream stays open as long as
+   * the peer is writing. Useful for chat-style or RPC-pipelining tests.
+   */
+  echoOrders: {
+    path: "/orders.v1.OrdersService/EchoOrders" as const,
+    requestStream: true as const,
+    responseStream: true as const,
+    requestSerialize: (value: CreateOrderRequest): Buffer => Buffer.from(CreateOrderRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreateOrderRequest => CreateOrderRequest.decode(value),
+    responseSerialize: (value: Order): Buffer => Buffer.from(Order.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Order => Order.decode(value),
+  },
 } as const;
 
 export interface OrdersServiceServer extends UntypedServiceImplementation {
@@ -603,6 +744,18 @@ export interface OrdersServiceServer extends UntypedServiceImplementation {
    * and ends the stream when the result set is exhausted.
    */
   listOrders: handleServerStreamingCall<ListOrdersRequest, Order>;
+  /**
+   * Client-streaming import — client pushes any number of orders, the
+   * server batches them and returns a single summary once the client
+   * half-closes. Demonstrates the AsyncIterable input pattern.
+   */
+  bulkCreateOrders: handleClientStreamingCall<CreateOrderRequest, BulkCreateOrdersResponse>;
+  /**
+   * Bidirectional — for every request the server emits exactly one
+   * response, but in either direction the stream stays open as long as
+   * the peer is writing. Useful for chat-style or RPC-pipelining tests.
+   */
+  echoOrders: handleBidiStreamingCall<CreateOrderRequest, Order>;
 }
 
 function longToNumber(int64: { toString(): string }): number {

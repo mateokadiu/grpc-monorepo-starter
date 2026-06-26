@@ -18,6 +18,16 @@ service OrdersService {
   // Stream orders matching the filter. Server flushes one per message
   // and ends the stream when the result set is exhausted.
   rpc ListOrders(ListOrdersRequest) returns (stream Order);
+
+  // Client-streaming import — client pushes any number of orders, the
+  // server batches them and returns a single summary once the client
+  // half-closes. Demonstrates the AsyncIterable input pattern.
+  rpc BulkCreateOrders(stream CreateOrderRequest) returns (BulkCreateOrdersResponse);
+
+  // Bidirectional — for every request the server emits exactly one
+  // response, but in either direction the stream stays open as long as
+  // the peer is writing. Useful for chat-style or RPC-pipelining tests.
+  rpc EchoOrders(stream CreateOrderRequest) returns (stream Order);
 }
 
 // OrderStatus — lifecycle of an order. Renumbering is a breaking change;
@@ -70,4 +80,13 @@ message ListOrdersRequest {
   string customer_id = 1;
   // Optional cap on emitted orders. 0 = no limit.
   uint32 limit = 2;
+}
+
+// BulkCreateOrdersResponse — summary returned at the end of a client-
+// streaming BulkCreateOrders call. created_ids preserves the order in
+// which the server saw the incoming requests.
+message BulkCreateOrdersResponse {
+  uint32 created = 1;
+  uint32 failed = 2;
+  repeated string created_ids = 3;
 }

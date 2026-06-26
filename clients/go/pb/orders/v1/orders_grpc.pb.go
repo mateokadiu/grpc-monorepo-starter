@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	OrdersService_CreateOrder_FullMethodName = "/orders.v1.OrdersService/CreateOrder"
-	OrdersService_GetOrder_FullMethodName    = "/orders.v1.OrdersService/GetOrder"
-	OrdersService_ListOrders_FullMethodName  = "/orders.v1.OrdersService/ListOrders"
+	OrdersService_CreateOrder_FullMethodName      = "/orders.v1.OrdersService/CreateOrder"
+	OrdersService_GetOrder_FullMethodName         = "/orders.v1.OrdersService/GetOrder"
+	OrdersService_ListOrders_FullMethodName       = "/orders.v1.OrdersService/ListOrders"
+	OrdersService_BulkCreateOrders_FullMethodName = "/orders.v1.OrdersService/BulkCreateOrders"
+	OrdersService_EchoOrders_FullMethodName       = "/orders.v1.OrdersService/EchoOrders"
 )
 
 // OrdersServiceClient is the client API for OrdersService service.
@@ -40,6 +42,14 @@ type OrdersServiceClient interface {
 	// Stream orders matching the filter. Server flushes one per message
 	// and ends the stream when the result set is exhausted.
 	ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Order], error)
+	// Client-streaming import — client pushes any number of orders, the
+	// server batches them and returns a single summary once the client
+	// half-closes. Demonstrates the AsyncIterable input pattern.
+	BulkCreateOrders(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateOrderRequest, BulkCreateOrdersResponse], error)
+	// Bidirectional — for every request the server emits exactly one
+	// response, but in either direction the stream stays open as long as
+	// the peer is writing. Useful for chat-style or RPC-pipelining tests.
+	EchoOrders(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[CreateOrderRequest, Order], error)
 }
 
 type ordersServiceClient struct {
@@ -89,6 +99,32 @@ func (c *ordersServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequ
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type OrdersService_ListOrdersClient = grpc.ServerStreamingClient[Order]
 
+func (c *ordersServiceClient) BulkCreateOrders(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateOrderRequest, BulkCreateOrdersResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &OrdersService_ServiceDesc.Streams[1], OrdersService_BulkCreateOrders_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[CreateOrderRequest, BulkCreateOrdersResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrdersService_BulkCreateOrdersClient = grpc.ClientStreamingClient[CreateOrderRequest, BulkCreateOrdersResponse]
+
+func (c *ordersServiceClient) EchoOrders(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[CreateOrderRequest, Order], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &OrdersService_ServiceDesc.Streams[2], OrdersService_EchoOrders_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[CreateOrderRequest, Order]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrdersService_EchoOrdersClient = grpc.BidiStreamingClient[CreateOrderRequest, Order]
+
 // OrdersServiceServer is the server API for OrdersService service.
 // All implementations should embed UnimplementedOrdersServiceServer
 // for forward compatibility.
@@ -105,6 +141,14 @@ type OrdersServiceServer interface {
 	// Stream orders matching the filter. Server flushes one per message
 	// and ends the stream when the result set is exhausted.
 	ListOrders(*ListOrdersRequest, grpc.ServerStreamingServer[Order]) error
+	// Client-streaming import — client pushes any number of orders, the
+	// server batches them and returns a single summary once the client
+	// half-closes. Demonstrates the AsyncIterable input pattern.
+	BulkCreateOrders(grpc.ClientStreamingServer[CreateOrderRequest, BulkCreateOrdersResponse]) error
+	// Bidirectional — for every request the server emits exactly one
+	// response, but in either direction the stream stays open as long as
+	// the peer is writing. Useful for chat-style or RPC-pipelining tests.
+	EchoOrders(grpc.BidiStreamingServer[CreateOrderRequest, Order]) error
 }
 
 // UnimplementedOrdersServiceServer should be embedded to have
@@ -122,6 +166,12 @@ func (UnimplementedOrdersServiceServer) GetOrder(context.Context, *GetOrderReque
 }
 func (UnimplementedOrdersServiceServer) ListOrders(*ListOrdersRequest, grpc.ServerStreamingServer[Order]) error {
 	return status.Errorf(codes.Unimplemented, "method ListOrders not implemented")
+}
+func (UnimplementedOrdersServiceServer) BulkCreateOrders(grpc.ClientStreamingServer[CreateOrderRequest, BulkCreateOrdersResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method BulkCreateOrders not implemented")
+}
+func (UnimplementedOrdersServiceServer) EchoOrders(grpc.BidiStreamingServer[CreateOrderRequest, Order]) error {
+	return status.Errorf(codes.Unimplemented, "method EchoOrders not implemented")
 }
 func (UnimplementedOrdersServiceServer) testEmbeddedByValue() {}
 
@@ -190,6 +240,20 @@ func _OrdersService_ListOrders_Handler(srv interface{}, stream grpc.ServerStream
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type OrdersService_ListOrdersServer = grpc.ServerStreamingServer[Order]
 
+func _OrdersService_BulkCreateOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OrdersServiceServer).BulkCreateOrders(&grpc.GenericServerStream[CreateOrderRequest, BulkCreateOrdersResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrdersService_BulkCreateOrdersServer = grpc.ClientStreamingServer[CreateOrderRequest, BulkCreateOrdersResponse]
+
+func _OrdersService_EchoOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OrdersServiceServer).EchoOrders(&grpc.GenericServerStream[CreateOrderRequest, Order]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrdersService_EchoOrdersServer = grpc.BidiStreamingServer[CreateOrderRequest, Order]
+
 // OrdersService_ServiceDesc is the grpc.ServiceDesc for OrdersService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -211,6 +275,17 @@ var OrdersService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "ListOrders",
 			Handler:       _OrdersService_ListOrders_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "BulkCreateOrders",
+			Handler:       _OrdersService_BulkCreateOrders_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "EchoOrders",
+			Handler:       _OrdersService_EchoOrders_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "orders/v1/orders.proto",

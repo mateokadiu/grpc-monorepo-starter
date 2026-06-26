@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file orders/v1/orders.proto.
  */
 export const file_orders_v1_orders: GenFile = /*@__PURE__*/
-  fileDesc("ChZvcmRlcnMvdjEvb3JkZXJzLnByb3RvEglvcmRlcnMudjEiUQoITGluZUl0ZW0SCwoDc2t1GAEgASgJEgwKBG5hbWUYAiABKAkSEAoIcXVhbnRpdHkYAyABKA0SGAoQdW5pdF9wcmljZV9jZW50cxgEIAEoBCK0AQoFT3JkZXISCgoCaWQYASABKAkSEwoLY3VzdG9tZXJfaWQYAiABKAkSJwoKbGluZV9pdGVtcxgDIAMoCzITLm9yZGVycy52MS5MaW5lSXRlbRITCgt0b3RhbF9jZW50cxgEIAEoBBIQCghjdXJyZW5jeRgFIAEoCRImCgZzdGF0dXMYBiABKA4yFi5vcmRlcnMudjEuT3JkZXJTdGF0dXMSEgoKY3JlYXRlZF9hdBgHIAEoCSJkChJDcmVhdGVPcmRlclJlcXVlc3QSEwoLY3VzdG9tZXJfaWQYASABKAkSJwoKbGluZV9pdGVtcxgCIAMoCzITLm9yZGVycy52MS5MaW5lSXRlbRIQCghjdXJyZW5jeRgDIAEoCSI2ChNDcmVhdGVPcmRlclJlc3BvbnNlEh8KBW9yZGVyGAEgASgLMhAub3JkZXJzLnYxLk9yZGVyIh0KD0dldE9yZGVyUmVxdWVzdBIKCgJpZBgBIAEoCSI3ChFMaXN0T3JkZXJzUmVxdWVzdBITCgtjdXN0b21lcl9pZBgBIAEoCRINCgVsaW1pdBgCIAEoDSquAQoLT3JkZXJTdGF0dXMSHAoYT1JERVJfU1RBVFVTX1VOU1BFQ0lGSUVEEAASGAoUT1JERVJfU1RBVFVTX1BFTkRJTkcQARIVChFPUkRFUl9TVEFUVVNfUEFJRBACEhgKFE9SREVSX1NUQVRVU19TSElQUEVEEAMSGgoWT1JERVJfU1RBVFVTX0RFTElWRVJFRBAEEhoKFk9SREVSX1NUQVRVU19DQU5DRUxMRUQQBTLXAQoNT3JkZXJzU2VydmljZRJMCgtDcmVhdGVPcmRlchIdLm9yZGVycy52MS5DcmVhdGVPcmRlclJlcXVlc3QaHi5vcmRlcnMudjEuQ3JlYXRlT3JkZXJSZXNwb25zZRI4CghHZXRPcmRlchIaLm9yZGVycy52MS5HZXRPcmRlclJlcXVlc3QaEC5vcmRlcnMudjEuT3JkZXISPgoKTGlzdE9yZGVycxIcLm9yZGVycy52MS5MaXN0T3JkZXJzUmVxdWVzdBoQLm9yZGVycy52MS5PcmRlcjABQq8BCg1jb20ub3JkZXJzLnYxQgtPcmRlcnNQcm90b1ABWkxnaXRodWIuY29tL21hdGVva2FkaXUvZ3JwYy1tb25vcmVwby1zdGFydGVyL2NsaWVudHMvZ28vcGIvb3JkZXJzL3YxO29yZGVyc3YxogIDT1hYqgIJT3JkZXJzLlYxygIJT3JkZXJzXFYx4gIVT3JkZXJzXFYxXEdQQk1ldGFkYXRh6gIKT3JkZXJzOjpWMWIGcHJvdG8z");
+  fileDesc("ChZvcmRlcnMvdjEvb3JkZXJzLnByb3RvEglvcmRlcnMudjEiUQoITGluZUl0ZW0SCwoDc2t1GAEgASgJEgwKBG5hbWUYAiABKAkSEAoIcXVhbnRpdHkYAyABKA0SGAoQdW5pdF9wcmljZV9jZW50cxgEIAEoBCK0AQoFT3JkZXISCgoCaWQYASABKAkSEwoLY3VzdG9tZXJfaWQYAiABKAkSJwoKbGluZV9pdGVtcxgDIAMoCzITLm9yZGVycy52MS5MaW5lSXRlbRITCgt0b3RhbF9jZW50cxgEIAEoBBIQCghjdXJyZW5jeRgFIAEoCRImCgZzdGF0dXMYBiABKA4yFi5vcmRlcnMudjEuT3JkZXJTdGF0dXMSEgoKY3JlYXRlZF9hdBgHIAEoCSJkChJDcmVhdGVPcmRlclJlcXVlc3QSEwoLY3VzdG9tZXJfaWQYASABKAkSJwoKbGluZV9pdGVtcxgCIAMoCzITLm9yZGVycy52MS5MaW5lSXRlbRIQCghjdXJyZW5jeRgDIAEoCSI2ChNDcmVhdGVPcmRlclJlc3BvbnNlEh8KBW9yZGVyGAEgASgLMhAub3JkZXJzLnYxLk9yZGVyIh0KD0dldE9yZGVyUmVxdWVzdBIKCgJpZBgBIAEoCSI3ChFMaXN0T3JkZXJzUmVxdWVzdBITCgtjdXN0b21lcl9pZBgBIAEoCRINCgVsaW1pdBgCIAEoDSJQChhCdWxrQ3JlYXRlT3JkZXJzUmVzcG9uc2USDwoHY3JlYXRlZBgBIAEoDRIOCgZmYWlsZWQYAiABKA0SEwoLY3JlYXRlZF9pZHMYAyADKAkqrgEKC09yZGVyU3RhdHVzEhwKGE9SREVSX1NUQVRVU19VTlNQRUNJRklFRBAAEhgKFE9SREVSX1NUQVRVU19QRU5ESU5HEAESFQoRT1JERVJfU1RBVFVTX1BBSUQQAhIYChRPUkRFUl9TVEFUVVNfU0hJUFBFRBADEhoKFk9SREVSX1NUQVRVU19ERUxJVkVSRUQQBBIaChZPUkRFUl9TVEFUVVNfQ0FOQ0VMTEVEEAUy9AIKDU9yZGVyc1NlcnZpY2USTAoLQ3JlYXRlT3JkZXISHS5vcmRlcnMudjEuQ3JlYXRlT3JkZXJSZXF1ZXN0Gh4ub3JkZXJzLnYxLkNyZWF0ZU9yZGVyUmVzcG9uc2USOAoIR2V0T3JkZXISGi5vcmRlcnMudjEuR2V0T3JkZXJSZXF1ZXN0GhAub3JkZXJzLnYxLk9yZGVyEj4KCkxpc3RPcmRlcnMSHC5vcmRlcnMudjEuTGlzdE9yZGVyc1JlcXVlc3QaEC5vcmRlcnMudjEuT3JkZXIwARJYChBCdWxrQ3JlYXRlT3JkZXJzEh0ub3JkZXJzLnYxLkNyZWF0ZU9yZGVyUmVxdWVzdBojLm9yZGVycy52MS5CdWxrQ3JlYXRlT3JkZXJzUmVzcG9uc2UoARJBCgpFY2hvT3JkZXJzEh0ub3JkZXJzLnYxLkNyZWF0ZU9yZGVyUmVxdWVzdBoQLm9yZGVycy52MS5PcmRlcigBMAFCrwEKDWNvbS5vcmRlcnMudjFCC09yZGVyc1Byb3RvUAFaTGdpdGh1Yi5jb20vbWF0ZW9rYWRpdS9ncnBjLW1vbm9yZXBvLXN0YXJ0ZXIvY2xpZW50cy9nby9wYi9vcmRlcnMvdjE7b3JkZXJzdjGiAgNPWFiqAglPcmRlcnMuVjHKAglPcmRlcnNcVjHiAhVPcmRlcnNcVjFcR1BCTWV0YWRhdGHqAgpPcmRlcnM6OlYxYgZwcm90bzM");
 
 /**
  * LineItem — one SKU on an order.
@@ -188,6 +188,37 @@ export const ListOrdersRequestSchema: GenMessage<ListOrdersRequest> = /*@__PURE_
   messageDesc(file_orders_v1_orders, 5);
 
 /**
+ * BulkCreateOrdersResponse — summary returned at the end of a client-
+ * streaming BulkCreateOrders call. created_ids preserves the order in
+ * which the server saw the incoming requests.
+ *
+ * @generated from message orders.v1.BulkCreateOrdersResponse
+ */
+export type BulkCreateOrdersResponse = Message<"orders.v1.BulkCreateOrdersResponse"> & {
+  /**
+   * @generated from field: uint32 created = 1;
+   */
+  created: number;
+
+  /**
+   * @generated from field: uint32 failed = 2;
+   */
+  failed: number;
+
+  /**
+   * @generated from field: repeated string created_ids = 3;
+   */
+  createdIds: string[];
+};
+
+/**
+ * Describes the message orders.v1.BulkCreateOrdersResponse.
+ * Use `create(BulkCreateOrdersResponseSchema)` to create a new message.
+ */
+export const BulkCreateOrdersResponseSchema: GenMessage<BulkCreateOrdersResponse> = /*@__PURE__*/
+  messageDesc(file_orders_v1_orders, 6);
+
+/**
  * OrderStatus — lifecycle of an order. Renumbering is a breaking change;
  * buf breaking guards this in CI.
  *
@@ -269,6 +300,30 @@ export const OrdersService: GenService<{
   listOrders: {
     methodKind: "server_streaming";
     input: typeof ListOrdersRequestSchema;
+    output: typeof OrderSchema;
+  },
+  /**
+   * Client-streaming import — client pushes any number of orders, the
+   * server batches them and returns a single summary once the client
+   * half-closes. Demonstrates the AsyncIterable input pattern.
+   *
+   * @generated from rpc orders.v1.OrdersService.BulkCreateOrders
+   */
+  bulkCreateOrders: {
+    methodKind: "client_streaming";
+    input: typeof CreateOrderRequestSchema;
+    output: typeof BulkCreateOrdersResponseSchema;
+  },
+  /**
+   * Bidirectional — for every request the server emits exactly one
+   * response, but in either direction the stream stays open as long as
+   * the peer is writing. Useful for chat-style or RPC-pipelining tests.
+   *
+   * @generated from rpc orders.v1.OrdersService.EchoOrders
+   */
+  echoOrders: {
+    methodKind: "bidi_streaming";
+    input: typeof CreateOrderRequestSchema;
     output: typeof OrderSchema;
   },
 }> = /*@__PURE__*/

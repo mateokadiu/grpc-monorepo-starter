@@ -33,6 +33,16 @@ class OrdersServiceStub(object):
                 request_serializer=orders_dot_v1_dot_orders__pb2.ListOrdersRequest.SerializeToString,
                 response_deserializer=orders_dot_v1_dot_orders__pb2.Order.FromString,
                 _registered_method=True)
+        self.BulkCreateOrders = channel.stream_unary(
+                '/orders.v1.OrdersService/BulkCreateOrders',
+                request_serializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString,
+                response_deserializer=orders_dot_v1_dot_orders__pb2.BulkCreateOrdersResponse.FromString,
+                _registered_method=True)
+        self.EchoOrders = channel.stream_stream(
+                '/orders.v1.OrdersService/EchoOrders',
+                request_serializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString,
+                response_deserializer=orders_dot_v1_dot_orders__pb2.Order.FromString,
+                _registered_method=True)
 
 
 class OrdersServiceServicer(object):
@@ -64,6 +74,24 @@ class OrdersServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def BulkCreateOrders(self, request_iterator, context):
+        """Client-streaming import — client pushes any number of orders, the
+        server batches them and returns a single summary once the client
+        half-closes. Demonstrates the AsyncIterable input pattern.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def EchoOrders(self, request_iterator, context):
+        """Bidirectional — for every request the server emits exactly one
+        response, but in either direction the stream stays open as long as
+        the peer is writing. Useful for chat-style or RPC-pipelining tests.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_OrdersServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -80,6 +108,16 @@ def add_OrdersServiceServicer_to_server(servicer, server):
             'ListOrders': grpc.unary_stream_rpc_method_handler(
                     servicer.ListOrders,
                     request_deserializer=orders_dot_v1_dot_orders__pb2.ListOrdersRequest.FromString,
+                    response_serializer=orders_dot_v1_dot_orders__pb2.Order.SerializeToString,
+            ),
+            'BulkCreateOrders': grpc.stream_unary_rpc_method_handler(
+                    servicer.BulkCreateOrders,
+                    request_deserializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.FromString,
+                    response_serializer=orders_dot_v1_dot_orders__pb2.BulkCreateOrdersResponse.SerializeToString,
+            ),
+            'EchoOrders': grpc.stream_stream_rpc_method_handler(
+                    servicer.EchoOrders,
+                    request_deserializer=orders_dot_v1_dot_orders__pb2.CreateOrderRequest.FromString,
                     response_serializer=orders_dot_v1_dot_orders__pb2.Order.SerializeToString,
             ),
     }
@@ -167,6 +205,60 @@ class OrdersService(object):
             target,
             '/orders.v1.OrdersService/ListOrders',
             orders_dot_v1_dot_orders__pb2.ListOrdersRequest.SerializeToString,
+            orders_dot_v1_dot_orders__pb2.Order.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BulkCreateOrders(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(
+            request_iterator,
+            target,
+            '/orders.v1.OrdersService/BulkCreateOrders',
+            orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString,
+            orders_dot_v1_dot_orders__pb2.BulkCreateOrdersResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def EchoOrders(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_stream(
+            request_iterator,
+            target,
+            '/orders.v1.OrdersService/EchoOrders',
+            orders_dot_v1_dot_orders__pb2.CreateOrderRequest.SerializeToString,
             orders_dot_v1_dot_orders__pb2.Order.FromString,
             options,
             channel_credentials,
