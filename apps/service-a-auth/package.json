@@ -1,0 +1,40 @@
+{
+  "name": "@repo/service-a-auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reference gRPC server with JWT auth. NestJS 11 + @nestjs/microservices wired through a @grpc/grpc-js Interceptor that validates a bearer token from the `authorization` metadata header. Pair with the matching service-b interceptor that attaches the token outbound.",
+  "exports": {
+    "./dist/app.module.js": "./dist/app.module.js",
+    "./dist/auth/jwt.js": "./dist/auth/jwt.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "node --enable-source-maps --watch dist/main.js",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.12.2",
+    "@grpc/proto-loader": "^0.7.13",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/microservices": "^11.0.0",
+    "@nestjs/platform-fastify": "^11.0.0",
+    "@repo/proto-gen": "workspace:*",
+    "fastify": "^5.2.0",
+    "jose": "^5.9.6",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^11.0.0",
+    "@swc/core": "^1.10.0",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2",
+    "unplugin-swc": "^1.5.1",
+    "vitest": "^2.1.8"
+  }
+}
