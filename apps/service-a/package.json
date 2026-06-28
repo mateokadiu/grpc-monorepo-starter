@@ -1,6 +1,6 @@
 {
   "name": "@repo/service-a",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Reference gRPC server. NestJS 11 + @nestjs/microservices; implements orders.v1.OrdersService with an in-memory store.",

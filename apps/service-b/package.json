@@ -1,6 +1,6 @@
 {
   "name": "@repo/service-b",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Reference gRPC consumer. NestJS 11 + Fastify HTTP server on :3001 that delegates REST endpoints to service-a's OrdersService over gRPC, including server-streaming for /orders.",

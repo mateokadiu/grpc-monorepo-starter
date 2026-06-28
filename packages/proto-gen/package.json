@@ -1,6 +1,6 @@
 {
   "name": "@repo/proto-gen",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Generated TypeScript types and gRPC bindings for the proto/ contract. Run `pnpm proto:gen` after editing any .proto file.",
   "type": "module",

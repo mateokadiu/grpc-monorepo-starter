@@ -1,6 +1,6 @@
 {
   "name": "@example/web",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Browser fetch demo for the gRPC starter. Uses @repo/connect-web + @connectrpc/connect-web to call a Connect-protocol gateway from a static HTML page. Point at envoy-grpc-web or connect-go to bridge raw gRPC.",

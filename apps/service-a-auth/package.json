@@ -1,6 +1,6 @@
 {
   "name": "@repo/service-a-auth",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Reference gRPC server with JWT auth. NestJS 11 + @nestjs/microservices wired through a @grpc/grpc-js Interceptor that validates a bearer token from the `authorization` metadata header. Pair with the matching service-b interceptor that attaches the token outbound.",

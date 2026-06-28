@@ -1,7 +1,7 @@
 {
   "name": "grpc-monorepo-starter",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Degit-able starter: pnpm workspace + Turborepo + NestJS gRPC services + ts-proto + Buf. Type-safe TS, Go, and Python clients from a single .proto edit.",
   "license": "MIT",
   "author": "Mateo Kadiu",
