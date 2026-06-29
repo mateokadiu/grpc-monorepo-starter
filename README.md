@@ -1,6 +1,11 @@
 # grpc-monorepo-starter
 
-Degit-able starter: **pnpm workspace + Turborepo + NestJS gRPC services + ts-proto + Buf**. One `.proto` edit produces type-safe TypeScript, browser, Go, and Python clients.
+> Degit-able starter: **pnpm workspace + Turborepo + NestJS gRPC services + ts-proto + Buf**. One `.proto` edit produces type-safe TypeScript, browser, Go, and Python clients.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Status](https://img.shields.io/badge/status-v1.0-brightgreen)](#whats-wired-v10)
+[![Node](https://img.shields.io/badge/node-22%20LTS-brightgreen)](#whats-wired-v10)
+[![Tests](https://img.shields.io/badge/tests-52-success)](#tests)
 
 ```
 proto/orders/v1/orders.proto     proto/users/v1/users.proto     proto/grpc/health/v1/health.proto
@@ -20,6 +25,20 @@ service-a       service-a-auth    service-b
  health +
  streaming)
 ```
+
+## Contents
+
+- [60-second quickstart](#60-second-quickstart)
+- [What's wired (v1.0)](#whats-wired-v10)
+- [Repo layout](#repo-layout)
+- [RPC surface](#rpc-surface)
+- [Browser clients](#browser-clients--clientsconnect-web)
+- [Multi-package protos](#multi-package-protos)
+- [Auth recipe](#auth-recipe--appsservice-a-auth)
+- [Standard health checks](#standard-health-checks)
+- [Streaming + deadlines + cancellation](#streaming--deadlines--cancellation)
+- [The edit-a-proto dev loop](#the-edit-a-proto-dev-loop)
+- [Tests](#tests)
 
 ## 60-second quickstart
 
@@ -57,7 +76,7 @@ curl -s 'http://localhost:3001/orders?customer_id=cus_1' | jq .
 curl -sN 'http://localhost:3001/orders?customer_id=cus_1&stream=ndjson'
 ```
 
-That's two NestJS services talking gRPC. The TypeScript bindings already exist under `packages/proto-gen/src/generated/`; Go and Python clients are committed under `clients/`; browser-side `connect-es` clients under `clients/connect-web/`.
+That's two NestJS services talking gRPC. The TypeScript bindings already exist under [`packages/proto-gen/src/generated/`](./packages/proto-gen/src/generated/); Go and Python clients are committed under [`clients/`](./clients/); browser-side `connect-es` clients under [`clients/connect-web/`](./clients/connect-web/).
 
 ## What's wired (v1.0)
 
@@ -158,6 +177,9 @@ import { User } from '@repo/proto-gen/users/v1';
 
 ## Auth recipe — `apps/service-a-auth`
 
+<details>
+<summary><b>Server-side JWT interceptor</b> — short-circuits unauthenticated calls with <code>UNAUTHENTICATED</code></summary>
+
 A reference NestJS gRPC server protected by a JWT interceptor:
 
 ```ts
@@ -171,6 +193,11 @@ export class AppModule {}
 
 The server-side interceptor reads `authorization: Bearer <jwt>` from gRPC `Metadata`, verifies via `jose`, and short-circuits unauthenticated calls with `status.UNAUTHENTICATED`. Health + reflection paths bypass the check so orchestrators can probe.
 
+</details>
+
+<details>
+<summary><b>Client-side token attachment</b> — same wire format for NestJS <code>ClientsModule</code> or raw <code>@grpc/grpc-js</code></summary>
+
 For the caller side, ship a `@grpc/grpc-js` client `Interceptor` that attaches the token outbound:
 
 ```ts
@@ -182,6 +209,8 @@ const client = new Client('localhost:50061', credentials.createInsecure(), { int
 ```
 
 Per-call token rotation (e.g. refreshing a short-lived JWT) lives in `tokenProvider`. Use the same wire format whether the caller is a NestJS `ClientsModule` consumer or a raw `@grpc/grpc-js` client.
+
+</details>
 
 ## Standard health checks
 
@@ -205,7 +234,7 @@ onModuleDestroy() {
 
 ## Streaming + deadlines + cancellation
 
-Every gRPC streaming shape has an integration test under `apps/service-a/src/streaming/`:
+Every gRPC streaming shape has an integration test under [`apps/service-a/src/streaming/`](./apps/service-a/src/streaming/):
 
 - `server-stream.test.ts` — `for await (const o of stream)` over a server-streaming RPC, including early-`break` cleanup.
 - `client-stream.test.ts` — drive `BulkCreateOrders` from any `AsyncIterable<CreateOrderRequest>`.
@@ -267,4 +296,4 @@ pnpm test
 
 ## License
 
-MIT.
+MIT · [@mateokadiu](https://github.com/mateokadiu)
