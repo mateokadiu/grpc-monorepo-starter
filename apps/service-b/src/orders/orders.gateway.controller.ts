@@ -1,3 +1,4 @@
+import { status as GrpcStatus } from '@grpc/grpc-js';
 import {
   Body,
   Controller,
@@ -10,15 +11,40 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import type { FastifyReply, FastifyRequest } from 'fastify';
-import { status as GrpcStatus } from '@grpc/grpc-js';
 import type { LineItem, Order } from '@repo/proto-gen';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { OrdersGatewayService } from './orders.gateway.service.js';
 
+/**
+ * Accepts both snake_case and camelCase on the wire so a `curl -d '{...}'`
+ * caller doesn't have to know that the inner LineItem objects flow straight
+ * through to the gRPC layer. The outer body is snake (HTTP-idiomatic), the
+ * inner objects can be either.
+ */
+interface LineItemBody {
+  sku?: string;
+  name?: string;
+  quantity?: number;
+  unit_price_cents?: number | string;
+  unitPriceCents?: number | string;
+}
+
 interface CreateOrderBody {
-  customer_id: string;
-  currency: string;
-  line_items: LineItem[];
+  customer_id?: string;
+  customerId?: string;
+  currency?: string;
+  line_items?: LineItemBody[];
+  lineItems?: LineItemBody[];
+}
+
+function toLineItem(raw: LineItemBody): LineItem {
+  const priceRaw = raw.unitPriceCents ?? raw.unit_price_cents ?? 0;
+  return {
+    sku: raw.sku ?? '',
+    name: raw.name ?? '',
+    quantity: Number(raw.quantity ?? 0),
+    unitPriceCents: typeof priceRaw === 'string' ? Number(priceRaw) : priceRaw,
+  };
 }
 
 /**
@@ -59,10 +85,11 @@ export class OrdersGatewayController {
   @Post()
   async create(@Body() body: CreateOrderBody): Promise<{ order: Order | undefined }> {
     try {
+      const lineItemsRaw = body.line_items ?? body.lineItems ?? [];
       const res = await this.gateway.createOrder({
-        customerId: body.customer_id ?? '',
+        customerId: body.customer_id ?? body.customerId ?? '',
         currency: body.currency ?? 'USD',
-        lineItems: body.line_items ?? [],
+        lineItems: lineItemsRaw.map(toLineItem),
       });
       return { order: res.order };
     } catch (err) {

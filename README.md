@@ -34,17 +34,27 @@ pnpm dev
 Then, in another shell:
 
 ```bash
-# create an order — REST in, gRPC out
+# create an order — REST in, gRPC out.
+# The gateway accepts both snake_case and camelCase on the wire;
+# pick whichever is more comfortable, you can also mix the two.
 curl -s -X POST http://localhost:3001/orders \
   -H 'content-type: application/json' \
-  -d '{"customer_id":"cus_1","currency":"USD","line_items":[{"sku":"A","name":"Espresso","quantity":2,"unitPriceCents":350}]}' \
-  | jq .
+  -d '{
+    "customer_id": "cus_1",
+    "currency": "USD",
+    "line_items": [
+      { "sku": "A", "name": "Espresso", "quantity": 2, "unit_price_cents": 350 }
+    ]
+  }' | jq .
 
-# read it back
-curl -s http://localhost:3001/orders/<id>
+# read it back (swap <id> for the ord_xxx returned above)
+curl -s http://localhost:3001/orders/<id> | jq .
 
-# stream all orders as NDJSON (server-streaming RPC forwarded over HTTP)
-curl -sN http://localhost:3001/orders?customer_id=cus_1&stream=ndjson
+# list orders for a customer
+curl -s 'http://localhost:3001/orders?customer_id=cus_1' | jq .
+
+# stream all orders as NDJSON (gRPC server-stream forwarded over HTTP/1.1)
+curl -sN 'http://localhost:3001/orders?customer_id=cus_1&stream=ndjson'
 ```
 
 That's two NestJS services talking gRPC. The TypeScript bindings already exist under `packages/proto-gen/src/generated/`; Go and Python clients are committed under `clients/`; browser-side `connect-es` clients under `clients/connect-web/`.
